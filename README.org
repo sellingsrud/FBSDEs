@@ -9,3 +9,6 @@ The folder ~analysis~ contains scripts generating plots, tables, solutions etc.
 ** Organisation TODOs
 - [ ] Make a proper Julia project, including ~.toml~ files that defines packages,
   versions etc.
+** Notes
+For demographic stuff, add some of the references about demand for saving.
+I think Fahri and Werning has one.
