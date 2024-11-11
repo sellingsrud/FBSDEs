@@ -1,0 +1,11 @@
+#+title: README
+
+Numerics for the FBSDE formulation of an OLG model.
+
+The folder ~src~ contains only functions and structs.
+The folder ~analysis~ contains scripts generating plots, tables, solutions etc.
+
+
+** Organisation TODOs
+- [ ] Make a proper Julia project, including ~.toml~ files that defines packages,
+  versions etc.
