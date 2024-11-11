@@ -33,3 +33,8 @@ savefig(plot_violation, "violation_penalty_plot.png")
 
 plot_smooth_2 = plot(viol_rng, smooth_crra.(viol_rng, EPS64, p.γ); plot_dict...)
 savefig(plot_smooth_2, "crra_plot_penalty_2.png")
+
+
+function plot_analytical(p)
+    ct_b, yt_b, at_b, aT_b = optimal_bequest(p)
+end
