@@ -104,7 +104,7 @@ function plot_nn_analytical(p,pp_star)
     p2 = plot(p.t, optimal_control, xlabel="t", label=L"c_t NN",linestyle=:dash,legend=:bottomleft)
     p2 = plot!(p.t, ct_b, xlabel="t", label=L"c_t Analytic",linestyle=:dash,legend=:bottomleft)
 
-    pg = plot(p1,p2, size=(800, 400),linewidth=2)
+    pg = plot(p1,p2, size=(800, 400),linewidth=2, margins = 1.25Plots.cm)
     savefig(pg, "nn_deterministic_solution.png")
 
     println("w_T NN = $(w[end]) and w_T Analytic = $(aT_b)")
