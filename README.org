@@ -9,3 +9,4 @@ The folder ~analysis~ contains scripts generating plots, tables, solutions etc.
 ** Organisation TODOs
 - [ ] Make a proper Julia project, including ~.toml~ files that defines packages,
   versions etc.
+- [ ] Add collaborators
