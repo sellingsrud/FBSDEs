@@ -47,7 +47,7 @@ function wealth(p, alpha, θ)
 end
 
 
-function crra_quad_interpret(c, gamma, epsilon, p)
+function crra_quad_interp(c, gamma, epsilon, p)
   if c >= epsilon
       c^(1 - gamma) / (1 - gamma)
   else
@@ -65,7 +65,7 @@ function running_utility(p, w, alpha, θ)
 
     ct = alpha([i,w[i]],θ,st)[1][1]
 
-    u = crra_quad_interpret(ct, γ, 0.001, 10)
+    u = crra_quad_interp(ct, γ, 0.001, 10)
     #if ct <=0
      # u = exp.(ρ *t[i])*violation_penalty(ct, EPS64)/Δt
     #else
@@ -80,7 +80,7 @@ end
 # Terminal utility
 function terminal_utility(p,wT)
   (; λ,ε,ρ,N,T) = p
-  exp.(-ρ*T).*λ.*crra_quad_interpret(wT, ε, 0.001, 10)
+  exp.(-ρ*T).*λ.*crra_quad_interp(wT, ε, 0.001, 10)
 end
 
 function total_utility(θ)

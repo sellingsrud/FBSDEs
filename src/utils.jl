@@ -9,7 +9,7 @@ global EPS64 = 18446744073709551615
 # Defines parameters used in both bequest and no bequest model
 # FIXME: Do we really need all this parameters? Perhaps clean it up a bit
 Base.@kwdef mutable struct Param
-    T:: Float32 = 75
+    T:: Float32 = 75 #Got a large error "AssertionError: isfinite(phi_d) && isfinite(gphi)..." when set to 100
     # Number of equidistant intervals in time
     N:: Int64 = 300
     Δt:: Float32 = T / N
@@ -28,7 +28,7 @@ Base.@kwdef mutable struct Param
 
 
     # Bequest model extra parameters
-    ε:: Float32 = 0.5 # Terminal utility exponent
+    ε:: Float32 = 0.5 # Terminal utility exponent AVI: WE SHOULD CHANGE THIS NOTATION NOT TO CLASH WITH APPROXIMATION EPSILON
     λ:: Float32 = 15 # Terminal utility coefficient
 
     # Mock parameters
