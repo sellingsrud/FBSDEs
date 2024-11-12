@@ -49,10 +49,21 @@ Base.@kwdef mutable struct Param
 end
 
 function crra(c, gamma)
+    if c < 0
+        return -Inf
+    end
     if gamma == 1
         log(c)
     else
         c.^(1 - gamma) / (1 - gamma)
+    end
+end
+
+function crra_talk(c, gamma)
+    if c < 0
+        10000*c
+    else
+        c^(1 - gamma) / (1 - gamma)
     end
 end
 

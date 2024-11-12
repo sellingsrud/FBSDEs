@@ -1,4 +1,4 @@
-using Plots; pgfplotsx()
+using Plots #; pgfplotsx()
 using LaTeXStrings
 
 include("../src/utils.jl")
@@ -7,33 +7,25 @@ include("../src/utils.jl")
 p = Param()
 
 viol_rng = -0.1:0.0001:0.5
-c_range = 0:0.01:5
+c_neg_range = -0.1:0.01:5
+c_range = -1.0:0.01:5
 c_range_smooth = -1.0e-16:1.0e-18:1.0e-16
 
 plot_dict = (
     xlabel = L"$c$",
-    label = L"$u(c)$",
     legend = :bottomright,
     size = (1200, 800),
     linewidth = 2,
-    margins = 2Plots.cm
+    margins = 2Plots.cm,
+    ylims = (-5, 5),
+    xlim = (-1, 5)
 )
 
-talk_eps = 0.05
-plot_crra = plot(c_range, crra.(c_range, p.γ) ; plot_dict...)
-savefig(plot_crra, "crra_plot.png")
+plot_crra = plot(c_range, crra_talk.(c_range, p.γ), label=L"$u^{crra}(c)$"; plot_dict...)
+savefig(plot_crra, "plots/crra_plot.png")
 
-plot_exp = plot(c_range, exp_util.(c_range, 2); plot_dict...)
-savefig(plot_exp, "exp_plot.png")
+plot_exp = plot(c_range, exp_util.(c_range, 2), label=L"$u^{exp}(c)$"; plot_dict...)
+savefig(plot_exp, "plots/exp_plot.png")
 
-plot_smooth = plot(c_range_smooth, smooth_crra.(c_range_smooth, talk_eps, p.γ); plot_dict...)
-savefig(plot_smooth, "crra_plot_penalty.png")
-
-plot_violation = plot(viol_rng, violation_penalty.(viol_rng, talk_eps); plot_dict...)
-savefig(plot_violation, "violation_penalty_plot.png")
-
-plot_smooth_2 = plot(viol_rng, smooth_crra.(viol_rng, talk_eps, p.γ); plot_dict...)
-savefig(plot_smooth_2, "crra_plot_penalty_2.png")
-
-plot_moll = plot(viol_rng, mollified_crra.(viol_rng, p.γ, 0.01, 1))
-savefig(plot_moll, "crra_quad_interp.png")
+plot_moll = plot(c_range, mollified_crra.(c_range, p.γ, 0.01, 1), label=L"$u^{crra\_quad}(c)$"; plot_dict...)
+savefig(plot_moll, "plots/crra_quad_interp.png")
