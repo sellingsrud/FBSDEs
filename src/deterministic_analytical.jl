@@ -6,7 +6,7 @@ include("utils.jl")
 
 
 # Use automatic differentation to use gradient method instead of Bisection
-D(f) = x -> ForwardDiff.derivative(f, float(x))
+#D(f) = x -> ForwardDiff.derivative(f, float(x))
 
 
 function aT(x, p::Param)
@@ -29,7 +29,10 @@ function optimal_bequest(p::Param)
     hT = (y0/(μ-r)) * (exp((μ-r)*T)-1)
     aT_0 = (a0 + hT) / exp(-r*T)
 
-    aT_sol = find_zero((f, D(f)), aT_0, Roots.Newton())
+    aT_upper_bound = exp.(r*t) .*(a0 .+ hT)
+
+    aT_sol = find_zero(x -> aT(x, p), (0, 10000), Roots.Bisection())
+    
 
     ct = exp.(-((r-ρ)/γ)*(T.-t)) *λ^(-1/γ)*aT_sol^(ε/γ)
     yt = y0*exp.(μ*t)
@@ -38,4 +41,18 @@ function optimal_bequest(p::Param)
     at = exp.(r*t) .*(a0 .+ ht .- cum_ct)
 
     return ct,yt,at,aT
+end
+
+function optimal_nobequest(cp)
+    (;γ,ρ,r,ψ,μ,y0,a0,t,T) = cp
+
+    h0 = (y0/(μ-r)) * (exp((μ-r)*T)-1)
+    c0 = (r-ψ)/(1-exp(-(r-ψ)*T)) *(a0+h0)
+    ct = c0*exp.(-((ρ-r)/γ).*t) 
+    yt = y0*exp.(μ*t)  # Income
+    ht = (y0/(μ-r)) * (exp.((μ-r)*t).-1) # human capital from 0 to t
+    cum_ct = (c0/(r-ψ)) * (1 .- exp.(-(r-ψ)*t))
+    at = exp.(r*t) .*(a0 .+ ht - cum_ct)
+
+    return ct,yt,at
 end
