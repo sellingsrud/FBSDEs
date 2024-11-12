@@ -46,6 +46,15 @@ function wealth(p, alpha, θ)
   return w
 end
 
+
+function crra_quad_interpret(c, gamma, epsilon, p)
+  if c >= epsilon
+      c^(1 - gamma) / (1 - gamma)
+  else
+      -(c^2)/(2 * epsilon^p) + (1 / epsilon^gamma + 1 / epsilon^(p - 1)) * c - 1 / (2 * epsilon^(p -2)) + epsilon^(1 - gamma)*gamma / (1 - gamma)
+  end
+end
+
 function running_utility(p, w, alpha, θ)
   (;n,N,ρ,t,Δt,γ) = p
 
@@ -56,11 +65,12 @@ function running_utility(p, w, alpha, θ)
 
     ct = alpha([i,w[i]],θ,st)[1][1]
 
-    if ct <=0
-      u = exp.(ρ *t[i])*violation_penalty(ct, EPS64)/Δt
-    else
-      u = u1(ct, p)
-    end
+    u = crra_quad_interpret(ct, γ, 0.001, 10)
+    #if ct <=0
+     # u = exp.(ρ *t[i])*violation_penalty(ct, EPS64)/Δt
+    #else
+    #  u = u1(ct, p)
+   #] end
 
       r_util = r_util .+ Δt * u * exp.(-ρ*t[i])
   end
@@ -70,11 +80,7 @@ end
 # Terminal utility
 function terminal_utility(p,wT)
   (; λ,ε,ρ,N,T) = p
-  if wT<=0
-      exp.(ρ*T)*violation_penalty(wT, EPS64)/λ
-  else
-      return exp.(-ρ*T).*λ.*u2(wT, p)
-  end
+  exp.(-ρ*T).*λ.*crra_quad_interpret(wT, ε, 0.001, 10)
 end
 
 function total_utility(θ)
@@ -135,11 +141,11 @@ optf = Optimization.OptimizationFunction((x, pp) -> total_utility(x), adtype)
 optprob = Optimization.OptimizationProblem(optf, ComponentVector{Float64}(pp))
 
 @info "Training with 0.1 learning"
-res1 = Optimization.solve(optprob, ADAM(0.1), callback = callback, maxiters = 50)
+res1 = Optimization.solve(optprob, ADAM(0.1), callback = callback, maxiters = 5)
 
 @info "Training with 0.01 learning"
 optprob2 = Optimization.OptimizationProblem(optf, res1.u)
-res2 = Optimization.solve(optprob2, ADAM(0.01), callback = callback, maxiters = 250)
+res2 = Optimization.solve(optprob2, ADAM(0.01), callback = callback, maxiters = 5)
 
 @info "Training with 0.001 learning"
 optprob3 = Optimization.OptimizationProblem(optf, res2.u)
@@ -147,11 +153,11 @@ res3 = Optimization.solve(optprob3, ADAM(0.001), callback = callback, maxiters =
 
 @info "Training with 0.0001 learning"
 optprob4 = Optimization.OptimizationProblem(optf, res3.u)
-res4 = Optimization.solve(optprob4, ADAM(0.0001), callback = callback, maxiters = 1000)
+res4 = Optimization.solve(optprob4, ADAM(0.0001), callback = callback, maxiters = 250)
 
 @info "Training with LBFGS"
 optprob5 = Optimization.OptimizationProblem(optf, res4.u)
-res5 = Optimization.solve(optprob5, Optim.BFGS(), callback = callback, maxiters = 1500)
+res5 = Optimization.solve(optprob5, Optim.BFGS(), callback = callback, maxiters = 500)
 
 # Optimal weights
 pp_star = res5.u

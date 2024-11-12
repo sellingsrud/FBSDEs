@@ -23,7 +23,7 @@ Base.@kwdef mutable struct Param
     σ:: Float32 = 0.1 # Stochastic income volatility (not used here)
     r:: Float32 = 0.02 # Return to savings = interest rate (currently fixed)
     ρ :: Float32 = 0.05 # Discount rate
-    γ:: Float32 = 2.0 # Running utility exponent
+    γ:: Float32 = 0.5 # Running utility exponent
     ψ:: Float32 = (r-ρ)/γ # Useful pre-calculated quantity
 
 
@@ -61,13 +61,21 @@ function exp_util(c, a)
 end
 
 function violation_penalty(x, eps)
-    eps.*x - eps
+    1000*eps.*x - eps
 end
 
 function smooth_crra(c, eps, gamma)
-    if c <= 0
+    if c < 0
         violation_penalty(c, eps)
     else
         crra(c, gamma)
+    end
+end
+
+function mollified_crra(c, gamma, epsilon, p)
+    if c >= epsilon
+        c^(1 - gamma) / (1 - gamma)
+    else
+        -(c^2)/(2 * epsilon^p) + (1 / epsilon^gamma + 1 / epsilon^(p - 1)) * c - 1 / (2 * epsilon^(p -2)) + epsilon^(1 - gamma)*gamma / (1 - gamma)
     end
 end
