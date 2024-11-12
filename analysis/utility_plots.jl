@@ -20,7 +20,7 @@ plot_dict = (
 )
 
 plot_crra = plot(c_range, crra.(c_range, p.γ); plot_dict...)
-savefig(plot_crra, "crra_plot.png")
+savefig(plot_crra, "../plots/crra_plot.png")
 
 plot_exp = plot(c_range, exp_util.(c_range, 2); plot_dict...)
 savefig(plot_exp, "exp_plot.png")

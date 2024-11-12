@@ -14,4 +14,6 @@ function plot_analytical(p)
     savefig("analytical_solution_deterministic_model.png")
 end
 
-plot_analytical(Param())
+#Include comment of which parameters are admissible to enter in Param() argument below
+
+plot_analytical(Param(;λ=4))
