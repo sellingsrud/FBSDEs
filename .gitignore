@@ -23,3 +23,5 @@ docs/site/
 # environment.
 Manifest.toml
 *.png
+plots/Output_Files/analytical_solution_deterministic_model.synctex.gz
+plots/Output_Files/analytical_solution_deterministic_model.aux

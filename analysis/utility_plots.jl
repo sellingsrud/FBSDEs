@@ -1,4 +1,4 @@
-using Plots
+using Plots; pgfplotsx()
 using LaTeXStrings
 
 include("../src/utils.jl")

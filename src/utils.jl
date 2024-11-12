@@ -23,13 +23,13 @@ Base.@kwdef mutable struct Param
     σ:: Float32 = 0.1 # Stochastic income volatility (not used here)
     r:: Float32 = 0.02 # Return to savings = interest rate (currently fixed)
     ρ :: Float32 = 0.05 # Discount rate
-    γ:: Float32 = 2.0 # Running utility exponent
+    γ:: Float32 = 0.5 # Running utility exponent
     ψ:: Float32 = (r-ρ)/γ # Useful pre-calculated quantity
 
 
     # Bequest model extra parameters
     ε:: Float32 = 0.5 # Terminal utility exponent
-    λ:: Float32 = 5 # Terminal utility coefficient
+    λ:: Float32 = 15 # Terminal utility coefficient
 
     # Mock parameters
     β:: Float32 = 1000 # Terminal target
