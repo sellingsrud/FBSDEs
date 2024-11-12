@@ -15,7 +15,15 @@ function plot_analytical(p)
     p2 = plot!(p2, p.t, ct_nb, label = L"$c_t^{nb}$", linestyle=:dash)
 
     pg = plot(p1,p2, size=(1200, 800),linewidth=2, margins = 1.25Plots.cm)
-    savefig("analytical_solution_deterministic_model.png")
+    savefig("plots/analytical_solution_deterministic_model.png")
 end
 
+<<<<<<< HEAD
 plot_analytical(Param(;γ=0.5))
+=======
+#Include comment of which parameters are admissible to enter in Param() argument below
+
+plot_analytical(Param(;λ=5))
+
+
+>>>>>>> 602644d7a370470b0224a7b837fc6c6d6864aee3

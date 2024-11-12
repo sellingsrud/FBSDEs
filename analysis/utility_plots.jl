@@ -20,19 +20,19 @@ plot_dict = (
 )
 
 plot_crra = plot(c_range, crra.(c_range, p.γ); plot_dict...)
-savefig(plot_crra, "../plots/crra_plot.png")
+savefig(plot_crra, "plots/crra_plot.png")
 
 plot_exp = plot(c_range, exp_util.(c_range, 2); plot_dict...)
-savefig(plot_exp, "exp_plot.png")
+savefig(plot_exp, "plots/exp_plot.png")
 
 plot_smooth = plot(c_range_smooth, smooth_crra.(c_range_smooth, EPS64, p.γ); plot_dict...)
-savefig(plot_smooth, "crra_plot_penalty.png")
+savefig(plot_smooth, "plots/crra_plot_penalty.png")
 
 plot_violation = plot(viol_rng, violation_penalty.(viol_rng, EPS64); plot_dict...)
-savefig(plot_violation, "violation_penalty_plot.png")
+savefig(plot_violation, "plots/violation_penalty_plot.png")
 
 plot_smooth_2 = plot(viol_rng, smooth_crra.(viol_rng, EPS64, p.γ); plot_dict...)
-savefig(plot_smooth_2, "crra_plot_penalty_2.png")
+savefig(plot_smooth_2, "plots/crra_plot_penalty_2.png")
 
 
 function plot_analytical(p)
