@@ -13,3 +13,8 @@ The folder ~analysis~ contains scripts generating plots, tables, solutions etc.
 ** Notes
 For demographic stuff, add some of the references about demand for saving.
 I think Fahri and Werning has one.
+
+** Current Fragilities
+
+ - Changing T - longer T seems unstable, 75 is currently good (13/10/2024)
+ - 

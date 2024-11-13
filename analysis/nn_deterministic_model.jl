@@ -65,7 +65,7 @@ function running_utility(p, w, alpha, θ)
 
     ct = alpha([i,w[i]],θ,st)[1][1]
 
-    u = crra_quad_interp(ct, γ, 0.001, 10)
+    u = crra_quad_interp(ct, γ, 0.01, 20)
     #if ct <=0
      # u = exp.(ρ *t[i])*violation_penalty(ct, EPS64)/Δt
     #else
@@ -80,7 +80,7 @@ end
 # Terminal utility
 function terminal_utility(p,wT)
   (; λ,ε,ρ,N,T) = p
-  exp.(-ρ*T).*λ.*crra_quad_interp(wT, ε, 0.001, 10)
+  exp.(-ρ*T).*λ.*crra_quad_interp(wT, ε, 0.01, 20)
 end
 
 function total_utility(θ)
@@ -148,16 +148,20 @@ adtype = Optimization.AutoZygote()
 optf = Optimization.OptimizationFunction((x, pp) -> total_utility(x), adtype)
 optprob = Optimization.OptimizationProblem(optf, ComponentVector{Float64}(pp))
 
+#optprob = Optimization.OptimizationProblem(optf, res5.u) # Will reuse the last output as the first input
+
+
+
 @info "Training with 0.1 learning"
-res1 = Optimization.solve(optprob, ADAM(0.1), callback = callback, maxiters = 250)
+res1 = Optimization.solve(optprob, ADAM(0.1), callback = callback, maxiters = 20)
 
 @info "Training with 0.01 learning"
 optprob2 = Optimization.OptimizationProblem(optf, res1.u)
-res2 = Optimization.solve(optprob2, ADAM(0.01), callback = callback, maxiters = 500)
+res2 = Optimization.solve(optprob2, ADAM(0.01), callback = callback, maxiters = 300)
 
 @info "Training with 0.001 learning"
 optprob3 = Optimization.OptimizationProblem(optf, res2.u)
-res3 = Optimization.solve(optprob3, ADAM(0.001), callback = callback, maxiters = 100)
+res3 = Optimization.solve(optprob3, ADAM(0.001), callback = callback, maxiters = 500)
 
 @info "Training with 0.0001 learning"
 optprob4 = Optimization.OptimizationProblem(optf, res3.u)

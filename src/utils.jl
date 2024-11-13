@@ -9,10 +9,9 @@ global EPS64 = 18446744073709551615
 # Defines parameters used in both bequest and no bequest model
 # FIXME: Do we really need all this parameters? Perhaps clean it up a bit
 Base.@kwdef mutable struct Param
-    T:: Float32 = 75 #Got a large error "AssertionError: isfinite(phi_d) && isfinite(gphi)..." when set to 100
-    # Number of equidistant intervals in time
-    N:: Int64 = 300
-    Δt:: Float32 = T / N
+    T:: Float32 = 1 #Got a large error "AssertionError: isfinite(phi_d) && isfinite(gphi)..." when set to 100 Effective parameters are different when we change the time horizon.
+    N:: Int64 = 300 # Number of equidistant intervals in time
+    Δt:: Float32 = T / N #SHOULD REVERSE THESE: FIX DELTA t TOLERANCE FIRST
     t:: Array{Float32} = collect(range(0, T, N + 1))
 
     # Spatial dimensions
