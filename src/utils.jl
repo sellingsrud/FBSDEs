@@ -1,4 +1,5 @@
 # This file contains general functions used several places
+using Parameters
 
 # This is the largest possible 32-bit number
 global EPS32 = 21474836480
@@ -8,9 +9,11 @@ global EPS64 = 18446744073709551615
 
 # Defines parameters used in both bequest and no bequest model
 # FIXME: Do we really need all this parameters? Perhaps clean it up a bit
-Base.@kwdef mutable struct Param
-    T:: Float32 = 1 #Got a large error "AssertionError: isfinite(phi_d) && isfinite(gphi)..." when set to 100 Effective parameters are different when we change the time horizon.
-    N:: Int64 = 300 # Number of equidistant intervals in time
+# TODO: Check whether parameters are admissible, possible to do this in the constructor
+@with_kw mutable struct Param
+    t0::Float32 = 0.0
+    T:: Float32 = 75 #Got a large error "AssertionError: isfinite(phi_d) && isfinite(gphi)..." when set to 100 Effective parameters are different when we change the time horizon.
+    N:: Int32 = 300 # Number of equidistant intervals in time
     Δt:: Float32 = T / N #SHOULD REVERSE THESE: FIX DELTA t TOLERANCE FIRST
     t:: Array{Float32} = collect(range(0, T, N + 1))
 
@@ -36,8 +39,8 @@ Base.@kwdef mutable struct Param
 
 
     # Number of Monte-Carlo
-    n:: Int64 = 50
-    s:: Int64 = 1
+    n:: Int32 = 50
+    s:: Int32 = 1
     #x::Array{Float32, 0} = zeros()
 
 
@@ -45,6 +48,9 @@ Base.@kwdef mutable struct Param
     y::Array{Float32} =y0 * exp.(μ*t)  # Pre-calculate income process
 
     a0::Float32 = 100 # Initial wealth
+
+    quad_eps::Float32 = 0.01 # Point to glue the quadtratic onto the CRRA
+    quad_p::Float32 = 15 # Parameter deciding the steepness of the quadtratic glue
 end
 
 function crra(c, gamma)
@@ -58,34 +64,21 @@ function crra(c, gamma)
     end
 end
 
-function crra_talk(c, gamma)
-    if c < 0
-        10000*c
-    else
-        c^(1 - gamma) / (1 - gamma)
-    end
+function cara(c, a)
+    (1 - exp(-a*c)) / a
 end
 
-function exp_util(c, a)
-    (1 - exp(-a* c)) / a
+function quad_interp(x, γ, ε, p)
+    a = -2 * ε^p
+    b = 1 / ε^γ + 1 / ε^(p - 1)
+    c = - 1 / (2*ε^(p-2)) + ε^(1 - γ)*γ / (1 - γ)
+    return a*x^2 + b*x + c
 end
 
-function violation_penalty(x, eps)
-    1000*eps.*x - eps
-end
-
-function smooth_crra(c, eps, gamma)
-    if c < 0
-        violation_penalty(c, eps)
-    else
-        crra(c, gamma)
-    end
-end
-
-function mollified_crra(c, gamma, epsilon, p)
-    if c >= epsilon
-        c^(1 - gamma) / (1 - gamma)
-    else
-        -(c^2)/(2 * epsilon^p) + (1 / epsilon^gamma + 1 / epsilon^(p - 1)) * c - 1 / (2 * epsilon^(p -2)) + epsilon^(1 - gamma)*gamma / (1 - gamma)
-    end
+function crra_quad_interp(c, γ, ε, p)
+  if c >= ε
+      crra(c, γ)
+  else
+      quad_interp(c, γ, ε, p)
+  end
 end

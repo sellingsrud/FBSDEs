@@ -40,7 +40,7 @@ function optimal_bequest(p::Param)
     cum_ct = factor*(1 .-exp.(-(par0/γ).*t))*λ^(-1/γ)*aT_sol^(ε/γ)
     at = exp.(r*t) .*(a0 .+ ht .- cum_ct)
 
-    return ct,yt,at,aT
+    return ct,yt,at,aT_sol
 end
 
 function optimal_nobequest(cp)
