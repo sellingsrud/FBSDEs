@@ -18,7 +18,7 @@ global EPS64 = 18446744073709551615
     t:: Array{Float32} = collect(range(0, T, N + 1))
 
     # Spatial dimensions
-    dim = 1
+    dim = 1 #This is the dimension of the output of the control variable
 
     # Common model parameters
     μ:: Float32 = 0.01 # Deterministic income growth rate
@@ -33,7 +33,7 @@ global EPS64 = 18446744073709551615
     ε:: Float32 = 0.5 # Terminal utility exponent AVI: WE SHOULD CHANGE THIS NOTATION NOT TO CLASH WITH APPROXIMATION EPSILON
     λ:: Float32 = 15 # Terminal utility coefficient
 
-    # Mock parameters
+    # Mock parameters for toy OU problem
     β:: Float32 = 1000 # Terminal target
     κ:: Float32 = 5 # Running cost coefficient
 
@@ -53,7 +53,7 @@ global EPS64 = 18446744073709551615
     quad_p::Float32 = 15 # Parameter deciding the steepness of the quadtratic glue
 end
 
-function crra(c, gamma)
+function crra(c, gamma) #c should probably be x since we apply these functions to consumpton and terminal wealth
     if c < 0
         return -Inf
     end

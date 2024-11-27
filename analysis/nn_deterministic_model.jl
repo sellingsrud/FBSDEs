@@ -125,7 +125,7 @@ end
 losses = Float64[]
 p = Param()
 
-dims = 30
+dims = 30  # dimension of the layers
 alpha = Chain(
     Dense(2, dims, relu),
     Dense(dims, dims, relu),
@@ -178,3 +178,4 @@ pp_star = res5.u
 plot_nn_analytical(p, pp_star)
 
 # Use determinstic solution as initial values for the stochastic one. How much speed gain?
+ 

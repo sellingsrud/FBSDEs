@@ -31,7 +31,7 @@ function optimal_bequest(p::Param)
 
     aT_upper_bound = exp.(r*t) .*(a0 .+ hT)
 
-    aT_sol = find_zero(x -> aT(x, p), (0, 10000), Roots.Bisection())
+    aT_sol = find_zero(x -> aT(x, p), (0, 10000), Roots.Bisection()) #Do we need this since bequest also has explicit solution?
     
 
     ct = exp.(-((r-ρ)/γ)*(T.-t)) *λ^(-1/γ)*aT_sol^(ε/γ)
